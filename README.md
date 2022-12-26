@@ -5,6 +5,12 @@ Plan 9, the operating system created by Bell Labs in the mid 1980s, had a
 utility called `p`, which was a simple pager. The modern `less` command is more
 powerful but I thought it would be fun to implement `p` in Go.
 
+I have implemented the number of lines argument handling and the list of files
+to be processed. I have not implemented stdin processing as the original did not
+do that. One interesting aspect of `p` is to allow a command to be entered
+following a page's output. It would be interesting to know why this was
+important in the original. I have implemented this 
+
 ## Original C code
 
 ```c
@@ -98,4 +104,61 @@ printfile(int f)
 		}
 	}
 }
+```
+
+## An example of using the bang option
+
+```
+ $ p test/long.txt
+```c
+#include <u.h>
+#include <libc.h>
+#include <bio.h>
+
+#define	DEF	22	/* lines in chunk: 3*DEF == 66, #lines per nroff page */
+
+Biobuf *cons;
+Biobuf bout;
+
+int pglen = DEF;
+
+void printfile(int);
+
+void
+main(int argc, char *argv[])
+{
+	int n;
+	int f;
+
+	if((cons = Bopen("/dev/tty", OREAD)) == 0) {
+!ls -lah
+output total 72
+drwxr-xr-x  14 ian  staff   448B 26 Dec 14:24 .
+drwxr-xr-x  60 ian  staff   1.9K 26 Dec 12:29 ..
+drwxr-xr-x  15 ian  staff   480B 26 Dec 14:24 .git
+-rw-r--r--   1 ian  staff     4B 26 Dec 14:17 .gitignore
+-rw-r--r--   1 ian  staff   3.1K 26 Dec 14:03 .goreleaser.yaml
+-rw-r--r--   1 ian  staff    11K 26 Dec 12:29 LICENSE
+-rw-r--r--   1 ian  staff   2.1K 26 Dec 14:48 README.md
+-rw-r--r--   1 ian  staff   797B 26 Dec 14:19 Taskfile.yaml
+drwxr-xr-x   4 ian  staff   128B 26 Dec 12:53 cmd
+drwxr-xr-x  14 ian  staff   448B 26 Dec 14:24 dist
+-rw-r--r--   1 ian  staff   141B 26 Dec 12:50 go.mod
+-rw-r--r--   1 ian  staff   1.4K 26 Dec 12:50 go.sum
+drwxr-xr-x   4 ian  staff   128B 26 Dec 13:40 test
+drwxr-xr-x   4 ian  staff   128B 26 Dec 14:24 vendor
+```
+
+## Lines of code
+
+```
+$ gocloc ./README.md cmd
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+Go                               2             18              9             97
+Markdown                         1             12              0             95
+-------------------------------------------------------------------------------
+TOTAL                            3             30              9            192
+-------------------------------------------------------------------------------
 ```

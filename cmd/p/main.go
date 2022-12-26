@@ -26,7 +26,7 @@ func wait() {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		} else {
-			fmt.Println("output", buffStdOut.String())
+			fmt.Println(buffStdOut.String())
 		}
 		return
 	}
@@ -37,8 +37,6 @@ func wait() {
 }
 
 func main() {
-	fmt.Println(args.Args.Files)
-
 	for _, path := range args.Args.Files {
 		if _, err := os.Stat(path); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
