@@ -1,15 +1,22 @@
 # p
-Plan 9 paging implementation (p)
+Plan 9 paging implementation.
 
 Plan 9, the operating system created by Bell Labs in the mid 1980s, had a
 utility called `p`, which was a simple pager. The modern `less` command is more
-powerful but I thought it would be fun to implement `p` in Go.
+powerful but I thought it would be fun to implement `p` in Go. The `less` command
+is 410 lines of code in its main file. See
+[here](https://github.com/vbwagner/less/blob/master/main.c). The `p` command is
+89 lines of code.
 
 I have implemented the number of lines argument handling and the list of files
 to be processed. I have not implemented stdin processing as the original did not
 do that. One interesting aspect of `p` is to allow a command to be entered
 following a page's output. It would be interesting to know why this was
-important in the original. I have implemented this 
+important in the original. I have implemented this in Golang.
+
+## Man page
+
+[Found here}(https://9fans.github.io/plan9port/man/man1/p.html)
 
 ## Original C code
 
