@@ -115,7 +115,7 @@ printfile(int f)
 
 ## An example of using the bang option
 
-```
+```c
  $ p test/long.txt
 ```c
 #include <u.h>
