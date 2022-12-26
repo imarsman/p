@@ -30,7 +30,9 @@ func wait() {
 		}
 		return
 	}
-	fmt.Println(text)
+	if strings.TrimSpace(text) != "" {
+		fmt.Println(text)
+	}
 	return
 }
 
