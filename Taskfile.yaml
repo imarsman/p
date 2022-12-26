@@ -15,9 +15,7 @@ tasks:
   build:
     dir: .
     cmds:
-      - mv dist/.gitignore .
       - goreleaser release --snapshot --rm-dist
-      - mv .gitignore dist/
   install:
     vars:
       ARCH_VER:
