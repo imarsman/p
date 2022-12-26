@@ -36,6 +36,9 @@ release:
 
     p - a Plan 9 pager workalike
 
+    v0.0.2
+    Improved handling of user input
+
     v0.0.1
     Initial release
 
