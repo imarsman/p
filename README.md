@@ -13,6 +13,9 @@ to be processed. One interesting aspect of `p` is to allow a command to be enter
 following a page's output. It would be interesting to know why this was
 important in the original. I have implemented this in Golang.
 
+One issue I have found with Go is that I can't get the code to get stdin then
+wait on stdin every 22 lines. So, currently there is no ability to read from stdin.
+
 ## Man page
 
 [Found here}(https://9fans.github.io/plan9port/man/man1/p.html)
