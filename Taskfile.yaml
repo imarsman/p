@@ -29,3 +29,8 @@ tasks:
       - cp ./{{.buildname}} {{.targetbin}}
       # - cmd: echo "{{.completionmsg}}"
       #   silent: true
+  release:
+    dir: .
+    desc: release to github using goreleaser
+    cmds:
+      - goreleaser release --rm-dist
