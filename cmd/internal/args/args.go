@@ -21,7 +21,7 @@ var Date string
 
 // Args commandline arguments
 type args struct {
-	Files  []string `arg:"positional, required"`
+	Files  []string `arg:"positional"`
 	Number int      `arg:"-n,--number" default:"22"`
 }
 

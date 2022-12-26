@@ -9,8 +9,7 @@ is 410 lines of code in its main file. See
 89 lines of code.
 
 I have implemented the number of lines argument handling and the list of files
-to be processed. I have not implemented stdin processing as the original did not
-do that. One interesting aspect of `p` is to allow a command to be entered
+to be processed. One interesting aspect of `p` is to allow a command to be entered
 following a page's output. It would be interesting to know why this was
 important in the original. I have implemented this in Golang.
 
