@@ -1,0 +1,19 @@
+╰─$ ./dist/p_darwin_arm64/p -h
+This is an implementation of the tail utility. File patterns can be specified
+with one or more final arguments or as glob patterns with one or more -G parameters.
+If files are followed for new data the glob file list will be checked every
+interval seconds. Initiate completion by running COMP_INSTALL=1 gotail
+
+commit:  f4d44a6
+tag:     v0.0.0
+date:    2022-12-26T18:02:57Z
+
+Usage: p [--number NUMBER] FILES [FILES ...]
+
+Positional arguments:
+  FILES
+
+Options:
+  --number NUMBER, -n NUMBER [default: 22]
+  --help, -h             display this help and exit
+  --version              display version and exit

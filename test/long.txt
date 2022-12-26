@@ -1,12 +1,3 @@
-# p
-Plan 9 paging implementation (p)
-
-Plan 9, the operating system created by Bell Labs in the mid 1980s, had a
-utility called `p`, which was a simple pager. The modern `less` command is more
-powerful but I thought it would be fun to implement `p` in Go.
-
-## Original C code
-
 ```c
 #include <u.h>
 #include <libc.h>

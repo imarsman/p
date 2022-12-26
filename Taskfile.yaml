@@ -1,0 +1,33 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  GREETING: p - a pager
+  targetbin: ~/bin
+  buildname: p
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  build:
+    dir: .
+    cmds:
+      - mv dist/.gitignore .
+      - goreleaser release --snapshot --rm-dist
+      - mv .gitignore dist/
+  install:
+    vars:
+      ARCH_VER:
+        sh: if [[ "{{ARCH}}" = "amd64" ]]; then echo "_v1"; else echo ""; fi
+    dir: ./dist/{{.buildname}}_{{OS}}_{{ARCH}}{{.ARCH_VER}}/
+    desc: "install in local bin directory"
+    cmds:
+      - task: build
+      - cmd: rm {{.targetbin}}/{{.buildname}}
+        ignore_error: true
+      - cp ./{{.buildname}} {{.targetbin}}
+      # - cmd: echo "{{.completionmsg}}"
+      #   silent: true
