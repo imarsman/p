@@ -31,6 +31,16 @@ func wait() {
 	}
 
 	text = strings.TrimSpace(text)
+	if text == "" {
+		return
+	}
+	if text == `q` {
+		os.Exit(0)
+	}
+
+	if text == `!` {
+		return
+	}
 
 	if strings.HasPrefix(text, `!`) {
 		var buffStdOut bytes.Buffer
@@ -48,9 +58,8 @@ func wait() {
 		}
 		return
 	}
-	if strings.TrimSpace(text) != "" {
-		fmt.Println(text)
-	}
+	fmt.Println(text)
+
 	return
 }
 
