@@ -13,8 +13,19 @@ to be processed. One interesting aspect of `p` is to allow a command to be enter
 following a page's output. It would be interesting to know why this was
 important in the original. I have implemented this in Golang.
 
-One issue I have found with Go is that I can't get the code to get stdin then
-wait on stdin every 22 lines. So, currently there is no ability to read from stdin.
+I found an issue I was facing earlier where processing stdin then getting paged
+input would result in no paging for stdin input. This was because the stdin in
+this case was from the parent process and not from the terminal. I had to
+redefine where to get input from.
+
+```go
+	tty, err := os.Open("/dev/tty")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	var r = bufio.NewReader(tty)
+```
 
 ## Man page
 
@@ -165,9 +176,9 @@ $ gocloc ./README.md cmd
 -------------------------------------------------------------------------------
 Language                     files          blank        comment           code
 -------------------------------------------------------------------------------
-Go                               2             18              9             97
-Markdown                         1             12              0             95
+Markdown                         1             25              0            148
+Go                               2             24             10            135
 -------------------------------------------------------------------------------
-TOTAL                            3             30              9            192
+TOTAL                            3             49             10            283
 -------------------------------------------------------------------------------
 ```
