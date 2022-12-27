@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
@@ -13,8 +14,22 @@ import (
 )
 
 func wait() {
-	reader := bufio.NewReader(os.Stdin)
-	text, _ := reader.ReadString('\n')
+	tty, err := os.Open("/dev/tty")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	var r = bufio.NewReader(tty)
+	text, err := r.ReadString('\n')
+	if len(text) == 0 && err != nil {
+		if err == io.EOF {
+			return
+		}
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	text = strings.TrimSpace(text)
 
 	if strings.HasPrefix(text, `!`) {
@@ -39,32 +54,37 @@ func wait() {
 	return
 }
 
-// var input *os.File
+func output(scanner *bufio.Scanner) {
+	count := 1
+	for scanner.Scan() {
+		if count == args.Args.Number+1 {
+			wait()
+			count = 1
+		}
+		fmt.Println(scanner.Text())
+		count++
+	}
+	if scanner.Err() != nil {
+		fmt.Printf("%v\n", scanner.Err())
+		os.Exit(1)
+	}
+}
 
 func main() {
 	var fileList []*os.File
 	var stdin string
 
-	// stat, _ := os.Stdin.Stat()
-	// if (stat.Mode() & os.ModeCharDevice) == 0 {
-	// 	// scanner := bufio.NewScanner(os.Stdin)
-
-	// 	// for scanner.Scan() {
-	// 	// 	sb.WriteString(fmt.Sprintf("%s\n", scanner.Text()))
-	// 	// }
-	// 	contents, err := io.ReadAll(os.Stdin)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
-	// 	stdin = string(contents)
-	// 	os.Stdin.Close()
-
-	// 	input, _, err = os.Pipe()
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	os.Stdin = input
-	// }
+	// Currently I can't find a way to read stdin and then read user input in
+	stat, _ := os.Stdin.Stat()
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		var err error
+		buf := new(strings.Builder)
+		_, err = io.Copy(buf, os.Stdin)
+		if err != nil {
+			fmt.Println(err)
+		}
+		stdin = string(buf.String())
+	}
 
 	for _, path := range args.Args.Files {
 		if _, err := os.Stat(path); err != nil {
@@ -85,36 +105,15 @@ func main() {
 		defer file.Close()
 	}
 
+	// write stdout
 	if len(stdin) > 0 {
 		scanner := bufio.NewScanner(strings.NewReader(stdin))
-		count := 1
-		for scanner.Scan() {
-			if count == args.Args.Number {
-				fmt.Println("waiting")
-				wait()
-				count = 1
-			}
-			fmt.Println(scanner.Text(), count)
-			count++
-		}
+		output(scanner)
 	}
 
+	// output files
 	for _, file := range fileList {
-		// loop until all lines processed
-		for {
-			count := 1
-			scanner := bufio.NewScanner(file)
-
-			// optionally, resize scanner's capacity for lines over 64K, see next example
-			for scanner.Scan() {
-				if count == args.Args.Number {
-					wait()
-					count = 1
-				}
-				fmt.Println(scanner.Text())
-				count++
-			}
-			break
-		}
+		scanner := bufio.NewScanner(file)
+		output(scanner)
 	}
 }
