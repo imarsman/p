@@ -85,7 +85,7 @@ func output(scanner *bufio.Scanner) {
 	if err != nil {
 		return
 	}
-	if args.Args.Lines == 30 {
+	if args.Args.Lines != 0 {
 		height = args.Args.Lines
 	}
 
