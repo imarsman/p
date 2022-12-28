@@ -23,8 +23,8 @@ var Date string
 type args struct {
 	Files   []string `arg:"positional"`
 	Number  bool     `arg:"-n,--number" default:"false"`
-	Lines   int      `arg:"-l,--lines" default:"22"`
-	Supress bool     `arg:"-s,--supress" help:"suppress output of non-printable characters"`
+	Lines   int      `arg:"-l,--lines" default:"30"`
+	Supress bool     `arg:"-s,--supress" help:"suppress output of non-printable characters" default:"false"`
 	Pretty  bool     `arg:"-p,--pretty" default:"false"`
 }
 

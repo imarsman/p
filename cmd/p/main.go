@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	"github.com/imarsman/p/cmd/internal/args"
+	"golang.org/x/term"
 )
 
 func centerString(str string, pad string, width int) string {
@@ -79,10 +80,17 @@ func wait() {
 }
 
 func output(scanner *bufio.Scanner) {
-	count := 1
-	total := 1
+	var count, total int = 1, 1
+	_, height, err := term.GetSize(0)
+	if err != nil {
+		return
+	}
+	if args.Args.Lines == 30 {
+		height = args.Args.Lines
+	}
+
 	for scanner.Scan() {
-		if count == args.Args.Lines+1 {
+		if count == height+1 {
 			wait()
 			count = 1
 		}
@@ -121,6 +129,7 @@ func supressIf(input string) string {
 }
 
 func main() {
+
 	var fileList []*os.File
 	var stdin string
 
