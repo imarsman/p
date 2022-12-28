@@ -36,6 +36,9 @@ release:
 
     p - a Plan 9 pager workalike
 
+    v0.0.5
+    Added line numbering and optional pretty printing
+
     v0.0.4
     Handling paging options
 

@@ -9,9 +9,18 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"unicode"
 
 	"github.com/imarsman/p/cmd/internal/args"
 )
+
+func centerString(str string, pad string, width int) string {
+	padWidth := int(float64(width-len(str)) / 2)
+	if str != "" {
+		return strings.Repeat(pad, padWidth) + " " + str + " " + strings.Repeat(pad, width-(padWidth+len(str))-2)
+	}
+	return strings.Repeat(pad, padWidth) + strings.Repeat(pad, width-(padWidth+len(str)))
+}
 
 func wait() {
 	tty, err := os.Open("/dev/tty")
@@ -54,7 +63,13 @@ func wait() {
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		} else {
-			fmt.Println(buffStdOut.String())
+			if args.Args.Pretty {
+				fmt.Println(centerString("command", `-`, 80))
+			}
+			fmt.Println(strings.TrimSpace(buffStdOut.String()))
+			if args.Args.Pretty {
+				fmt.Println(centerString("", `-`, 80))
+			}
 		}
 		return
 	}
@@ -65,18 +80,44 @@ func wait() {
 
 func output(scanner *bufio.Scanner) {
 	count := 1
+	total := 1
 	for scanner.Scan() {
-		if count == args.Args.Number+1 {
+		if count == args.Args.Lines+1 {
 			wait()
 			count = 1
 		}
-		fmt.Println(scanner.Text())
+		if args.Args.Number {
+			fmt.Printf("%8d %s\n", total, supressIf(scanner.Text()))
+		} else {
+			fmt.Println(supressIf(scanner.Text()))
+		}
 		count++
+		total++
 	}
 	if scanner.Err() != nil {
 		fmt.Printf("%v\n", scanner.Err())
 		os.Exit(1)
 	}
+}
+
+func supressIf(input string) string {
+	if args.Args.Supress == false {
+		return input
+	}
+	var sb strings.Builder
+	for _, r := range input {
+		if unicode.IsPunct(r) {
+			sb.WriteRune(r)
+			continue
+		} else if unicode.IsPrint(r) {
+			sb.WriteRune(r)
+			continue
+		}
+		// Don't add if not caught above
+		// sb.WriteRune(-1)
+	}
+
+	return sb.String()
 }
 
 func main() {

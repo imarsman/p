@@ -21,8 +21,11 @@ var Date string
 
 // Args commandline arguments
 type args struct {
-	Files  []string `arg:"positional"`
-	Number int      `arg:"-n,--number" default:"22"`
+	Files   []string `arg:"positional"`
+	Number  bool     `arg:"-n,--number" default:"false"`
+	Lines   int      `arg:"-l,--lines" default:"22"`
+	Supress bool     `arg:"-s,--supress" help:"suppress output of non-printable characters"`
+	Pretty  bool     `arg:"-p,--pretty" default:"false"`
 }
 
 // Args command line args
